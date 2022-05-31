@@ -3,6 +3,16 @@ import json
 import logging
 import datetime
 
+class Period:
+    def __init__(self, start_time, end_time, room, subject, class_, teacher = None, type_ = None):
+        self.start_time = start_time
+        self.end_time = end_time
+        self.room = room
+        self.subject = subject
+        self.class_ = class_
+        self.teacher = teacher
+        self.type_ = type_
+
 weekdays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
 
 
@@ -89,7 +99,17 @@ def arrange_timetable(unstructured_timetable, room_list, subject_list, class_lis
             if period["date"] == date:
                 days.append(period)
         week_.append(sorted(days, key = lambda x: x["startTime"], reverse = False))
-    return week_
+    
+    new_day = []
+    new_week = []
+    for i in week_:
+        for j in i:
+            # TODO: fix this
+            new_period = Period(j["startTime"], j["endTime"], j["ro"][0]["id"], j["su"][0]["id"], j["kl"][0]["id"])
+            new_day.append(new_period)
+        new_week.append(new_day)
+
+    return new_week
 
 
 def main():
@@ -114,8 +134,8 @@ def main():
     for j, k in zip(week, weekdays):
         print(k + ":")
         for i in j:
-            print(i)
-        print("\n")
+            print(f"{i.start_time} - {i.end_time}\nRaum: {i.room}; Fach: {i.subject}\n")
+        print("\n\n")
 
     # logout to free up server space
     requests.post(URL, params = params, json = {"id":"ID","method": "logout","params": {},"jsonrpc":"2.0"}, cookies = {'JSESSIONID': session_id})
