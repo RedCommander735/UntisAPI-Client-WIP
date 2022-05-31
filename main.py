@@ -3,6 +3,8 @@ import json
 import logging
 import datetime
 
+weekdays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
+
 
 def get_date():
     day = datetime.datetime.today()
@@ -109,7 +111,8 @@ def main():
     week = arrange_timetable(timetable, rooms, subjects, classes)
 
 
-    for j in week:
+    for j, k in zip(week, weekdays):
+        print(k + ":")
         for i in j:
             print(i)
         print("\n")
