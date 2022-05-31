@@ -14,12 +14,12 @@ def get_date():
 
 def load_credentials():
     try:
-        with open("cerdentials.json") as credentials:
+        with open("credentials.json") as credentials:
             creds = json.load(credentials)
             return creds["username"], creds["password"], creds["school"], creds["base_url"]
     except FileNotFoundError:
         print("Credentials file not found. Please fill in the following values")
-        with open("cerdentials.json", "w") as credentials:
+        with open("credentials.json", "w") as credentials:
             json.dump({"username": input("Username: "), "password": input("Password: "), "school": input("School name [On WebUntis loginsite: ...?school= →SCHOOLNAME← ...]: "), "base_url": input("Base URL [On WebUntis loginsite: ...https:// →BASE URL← /WebUntis...]: ")}, credentials)
             credentials.close()
             return load_credentials()
