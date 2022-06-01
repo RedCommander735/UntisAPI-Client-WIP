@@ -13,7 +13,7 @@ class Period:
         self.teacher = teacher
         self.type_ = type_
 
-weekdays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
+WEEKDAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
 
 
 def get_date():
@@ -115,7 +115,7 @@ def arrange_timetable(unstructured_timetable, room_list, subject_list, class_lis
     return new_week
 
 
-def main():
+def get_timetable():
     user, password, school_name, base_url = load_credentials()
 
     URL = f"https://{base_url}/WebUntis/jsonrpc.do"
@@ -133,15 +133,17 @@ def main():
 
     week = arrange_timetable(timetable, rooms, subjects, classes)
 
-
-    for j, k in zip(week, weekdays):
-        print(k + ":")
-        for i in j:
-            print(f"{i.start_time.strftime('%H:%M')} - {i.end_time.strftime('%H:%M')}\n{i.subject} | {i.room}\n")
-        print("\n\n")
-
     # logout to free up server space
     requests.post(URL, params = params, json = {"id":"ID","method": "logout","params": {},"jsonrpc":"2.0"}, cookies = {'JSESSIONID': session_id})
 
+    return week
+
+def print_tt(week_):
+    for j, k in zip(week_, WEEKDAYS):
+        print(k + ":")
+        for i in j:
+            print(f"{i.start_time.strftime('%H:%M')} - {i.end_time.strftime('%H:%M')}\n{i.subject} | {i.room}\n")
+        print("\n")
+
 if __name__ == "__main__":
-    main()
+    print_tt(get_timetable())
