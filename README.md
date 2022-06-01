@@ -4,6 +4,8 @@ A small python client that currently connects to the WebUntis API with your cred
 
 TODO:
 
+- [ ] Also get timegrid info
+
 - [ ] Get Teacher Names
 - [ ] Add support for exams, etc.
 - [ ] Add GUI
