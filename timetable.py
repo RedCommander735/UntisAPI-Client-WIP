@@ -1,7 +1,7 @@
 import requests
 import json
 import logging
-import datetime
+from datetime import datetime, timedelta
 
 class Period:
     def __init__(self, start_time, end_time, room, subject, class_, teacher = None, type_ = None):
@@ -17,9 +17,9 @@ weekdays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
 
 
 def get_date():
-    day = datetime.datetime.today()
-    start = day - datetime.timedelta(days=day.weekday())
-    week_end = (start + datetime.timedelta(days=4)).strftime('%Y%m%d')
+    day = datetime.today()
+    start = day - timedelta(days=day.weekday())
+    week_end = (start + timedelta(days=4)).strftime('%Y%m%d')
     week_start = start.strftime('%Y%m%d')
     return week_start, week_end
 
@@ -103,9 +103,12 @@ def arrange_timetable(unstructured_timetable, room_list, subject_list, class_lis
     new_day = []
     new_week = []
     for i in week_:
+        new_day = []
         for j in i:
             # TODO: fix this
-            new_period = Period(j["startTime"], j["endTime"], j["ro"][0]["id"], j["su"][0]["id"], j["kl"][0]["id"])
+            start_ = datetime.strptime(str(j["startTime"]).rjust(4, "0"), "%H%M")
+            end_ = datetime.strptime(str(j["endTime"]).rjust(4, "0"), "%H%M")
+            new_period = Period(start_, end_, j["ro"][0]["id"], j["su"][0]["id"], j["kl"][0]["id"])
             new_day.append(new_period)
         new_week.append(new_day)
 
@@ -134,7 +137,7 @@ def main():
     for j, k in zip(week, weekdays):
         print(k + ":")
         for i in j:
-            print(f"{i.start_time} - {i.end_time}\nRaum: {i.room}; Fach: {i.subject}\n")
+            print(f"{i.start_time.strftime('%H:%M')} - {i.end_time.strftime('%H:%M')}\n{i.subject} | {i.room}\n")
         print("\n\n")
 
     # logout to free up server space
